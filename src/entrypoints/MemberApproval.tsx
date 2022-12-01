@@ -30,18 +30,24 @@ export default function MemberApproval({ ctx }: PropTypes) {
         headers: { 'Content-type': 'application/json' }
       })
 
-      ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
-      ctx.saveCurrentItem()
+      const body = await res.json()
+
+      if (res.status !== 200)
+        throw new Error('Server error: ' + body.error)
+
+      await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
+      await ctx.saveCurrentItem()
       setLoading(false)
 
     } catch (err) {
+
       setError(err as Error)
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    //setApproved(ctx.formValues[ctx.field.attributes.api_key] as boolean)
+    setApproved(ctx.formValues[ctx.field.attributes.api_key] as boolean)
   }, [ctx.formValues, ctx.field])
 
   return (

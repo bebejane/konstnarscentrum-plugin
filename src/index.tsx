@@ -53,12 +53,12 @@ connect({
   },
   itemFormSidebarPanels(itemType: ItemType, ctx: InitPropertiesAndMethods) {
     const helpModels = ctx.plugin.attributes.parameters.helpModels as string;
+    if (!helpModels)
+      return []
 
-    if (helpModels) {
-      const activeHelpModels = (JSON.parse(helpModels) as ModelOption[])
-      if (!activeHelpModels.find(({ value }) => value === itemType.attributes.api_key))
-        return []
-    }
+    const activeHelpModels = (JSON.parse(helpModels) as ModelOption[])
+    if (!activeHelpModels.find(({ value }) => value === itemType.attributes.api_key))
+      return []
 
     return [
       {

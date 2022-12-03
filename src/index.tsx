@@ -4,9 +4,10 @@ import { connect, IntentCtx, RenderFieldExtensionCtx, ItemType, InitPropertiesAn
 import { render } from './utils/render';
 import ConfigScreen from './entrypoints/ConfigScreen';
 import RegionField from './entrypoints/RegionField'
-import ModelSelector from './entrypoints/ModelSelector'
+import ModelSelectorField from './entrypoints/ModelSelectorField'
 import HelpSidebar from './entrypoints/HelpSidebar'
 import MemberApproval from './entrypoints/MemberApproval'
+import type { ModelOption } from './entrypoints/ModelSelector';
 import 'datocms-react-ui/styles.css';
 import { isDev } from './utils'
 
@@ -47,10 +48,18 @@ connect({
       case 'member-approval':
         return render(<MemberApproval ctx={ctx} />);
       case 'model-selector':
-        return render(<ModelSelector ctx={ctx} />);
+        return render(<ModelSelectorField ctx={ctx} />);
     }
   },
   itemFormSidebarPanels(itemType: ItemType, ctx: InitPropertiesAndMethods) {
+    const helpModels = ctx.plugin.attributes.parameters.helpModels as string;
+
+    if (helpModels) {
+      const activeHelpModels = (JSON.parse(helpModels) as ModelOption[])
+      if (!activeHelpModels.find(({ value }) => value === itemType.attributes.api_key))
+        return []
+    }
+
     return [
       {
         id: 'sidebarHelp',
@@ -61,6 +70,7 @@ connect({
     ];
   },
   renderItemFormSidebarPanel(sidebarPanelId, ctx: RenderItemFormSidebarPanelCtx) {
+
     ReactDOM.render(
       <React.StrictMode>
         <HelpSidebar ctx={ctx} />

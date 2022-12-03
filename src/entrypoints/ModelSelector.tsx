@@ -1,10 +1,13 @@
 import { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
-import { Canvas, SelectField } from 'datocms-react-ui';
+import { SelectField } from 'datocms-react-ui';
 import { useEffect, useState } from 'react';
 import { buildClient } from '@datocms/cma-client-browser';
 
 export type PropTypes = {
-  ctx: RenderFieldExtensionCtx;
+  isMulti?: boolean
+  currentUserAccessToken: string
+  currentValue: ModelOption | ModelOption[]
+  onChange: (option: ModelOption | ModelOption[]) => void
 };
 
 export type ModelOption = {
@@ -12,16 +15,15 @@ export type ModelOption = {
   value: string
 }
 
-export default function ModelSelector({ ctx }: PropTypes) {
+export default function ModelSelector({ onChange, isMulti = false, currentUserAccessToken, currentValue }: PropTypes) {
 
   const [options, setOptions] = useState<ModelOption[] | undefined>()
-  const [value, setValue] = useState<ModelOption | undefined>()
+  const [option, setOption] = useState<ModelOption | ModelOption[] | undefined>()
   const [error, setError] = useState<Error | undefined>()
 
   useEffect(() => {
 
-    const client = buildClient({ apiToken: ctx.currentUserAccessToken as string })
-    const currentValue = ctx.formValues[ctx.field.attributes.api_key];
+    const client = buildClient({ apiToken: currentUserAccessToken as string })
 
     client.itemTypes.list().then((models) => {
 
@@ -32,32 +34,35 @@ export default function ModelSelector({ ctx }: PropTypes) {
 
       setOptions(options)
 
-      if (currentValue)
-        setValue(options.find(({ value }) => value === currentValue))
-      else {
-        const roleName = ctx.currentRole.attributes.name.toLowerCase();
-        setValue(options.find(({ value, label }) => label.toLowerCase() === roleName))
+      if (currentValue) {
+        if (!Array.isArray(currentValue))
+          setOption(options.find(({ value }) => value === currentValue.value))
+        else
+          setOption(options.filter(({ value }) => currentValue.find(el => el.value === value)))
       }
+
+
     }).catch(err => setError(err))
 
   }, [setOptions])
 
   useEffect(() => {
-    ctx.setFieldValue(ctx.field.attributes.api_key, value?.value)
-  }, [value])
+    if (typeof option !== 'undefined')
+      onChange(option)
+  }, [option])
 
   return (
-    <Canvas ctx={ctx}>
+    <>
       <SelectField
         id="model"
         name="model"
         label=""
-        value={value}
-        selectInputProps={{ isMulti: false, options }}
-        onChange={(newValue) => { setValue(newValue as ModelOption) }}
+        value={option}
+        selectInputProps={{ isMulti, options }}
+        onChange={(newValue) => { setOption(newValue as ModelOption) }}
       />
       {error && <div>Error: {error.message}</div>}
-    </Canvas>
+    </>
   )
 
 }

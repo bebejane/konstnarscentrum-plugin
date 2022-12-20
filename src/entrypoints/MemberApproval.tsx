@@ -3,6 +3,7 @@ import { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
 import { Canvas, Button, Spinner } from 'datocms-react-ui';
 import { useEffect, useState } from 'react';
 import { siteUrl } from '../utils';
+import { config } from 'process';
 
 const approvalEndpoint = `${siteUrl}/api/auth/approve`
 
@@ -22,6 +23,8 @@ export default function MemberApproval({ ctx }: PropTypes) {
     try {
       setLoading(true)
       setError(undefined)
+
+      console.log(basicAuthPassword, basicAuthUsername)
 
       const formData = { ...ctx.formValues }
       console.log('Authorization', 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword));

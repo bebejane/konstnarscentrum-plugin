@@ -13,7 +13,7 @@ export type PropTypes = {
 
 export default function MemberApproval({ ctx }: PropTypes) {
 
-  const { basicAuthPassword, basicAuthUsername } = ctx.parameters
+  const { basicAuthPassword, basicAuthUsername } = ctx.plugin.attributes.parameters
   const [approved, setApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()

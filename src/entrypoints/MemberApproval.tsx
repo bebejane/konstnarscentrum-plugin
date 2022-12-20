@@ -12,6 +12,7 @@ export type PropTypes = {
 
 export default function MemberApproval({ ctx }: PropTypes) {
 
+  const { basicAuthPassword, basicAuthUsername } = ctx.parameters
   const [approved, setApproved] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()
@@ -27,8 +28,12 @@ export default function MemberApproval({ ctx }: PropTypes) {
       const res = await fetch(approvalEndpoint, {
         method: 'POST',
         body: JSON.stringify(formData),
-        headers: { 'Content-type': 'application/json' }
+        headers: {
+          'Content-type': 'application/json',
+          'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword)
+        }
       })
+
 
       const body = await res.json()
 
@@ -67,11 +72,11 @@ export default function MemberApproval({ ctx }: PropTypes) {
             </>
           }
         </p>
-        {!approved &&
-          <Button fullWidth disabled={loading} onClick={approveApplication}>
-            {!loading ? 'Godkänn ansökan' : <Spinner />}
-          </Button>
-        }
+
+        <Button fullWidth disabled={loading} onClick={approveApplication}>
+          {!loading ? 'Godkänn ansökan' : <Spinner />}
+        </Button>
+
         {error &&
           <p className={s.error}>
             Error: {error.message}

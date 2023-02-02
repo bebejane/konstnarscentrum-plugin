@@ -71,25 +71,19 @@ export default function MemberApproval({ ctx }: PropTypes) {
   return (
     <Canvas ctx={ctx}>
       <div className={s.container}>
-        <strong>{approved ? 'GODKÄND' : 'EJ GODKÄN  D'}</strong>
-        <p>
-          {approved ?
-            <>
-              Ansökan är godkänd
-            </>
-            :
-            <>
+        <strong>{approved ? 'GODKÄND' : 'EJ GODKÄND'}</strong>
+
+        {!approved &&
+          <>
+            <p>
               Genom att klicka på knappen nedan godkänns ansökan
               och medlemmen skickas ett e-mail med instruktioner
               för att skapa sitt konto och portfolio.
-            </>
-          }
-        </p>
-
-        {!approved &&
-          <Button fullWidth disabled={loading} onClick={approveApplication}>
-            {!loading ? 'Godkänn ansökan' : <Spinner />}
-          </Button>
+            </p>
+            <Button fullWidth disabled={loading} onClick={approveApplication}>
+              {!loading ? 'Godkänn ansökan' : <Spinner />}
+            </Button>
+          </>
         }
 
         {error &&

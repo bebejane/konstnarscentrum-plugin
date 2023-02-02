@@ -20,7 +20,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
 
   const approveApplication = async () => {
 
-    if (approved) return
+    //if (approved) return
     try {
 
       setLoading(true)

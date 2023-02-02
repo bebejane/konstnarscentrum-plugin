@@ -42,8 +42,12 @@ export default function MemberApproval({ ctx }: PropTypes) {
       if (res.status !== 200)
         throw new Error('Server error: ' + body.error)
 
-      await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
-      await ctx.saveCurrentItem()
+      try {
+        await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
+        await ctx.saveCurrentItem()
+      } catch (err) {
+        console.warn(err)
+      }
       setApproved(true)
 
     } catch (err) {

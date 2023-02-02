@@ -45,9 +45,10 @@ export default function MemberApproval({ ctx }: PropTypes) {
 
       try {
         console.log('set field value');
-
-        await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
-        await ctx.saveCurrentItem()
+        if (approved !== ctx.item?.attributes.approved) {
+          await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
+          await ctx.saveCurrentItem()
+        }
       } catch (err) {
         console.warn(err)
       }

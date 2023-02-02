@@ -87,7 +87,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
             för att skapa sitt konto och portfolio.
           </p>
         }
-        <Button fullWidth disabled={loading} onClick={approveApplication}>
+        <Button className={s.button} fullWidth disabled={loading} onClick={approveApplication}>
           {!loading ? 'Godkänn ansökan' : <Spinner />}
         </Button>
 
@@ -96,7 +96,6 @@ export default function MemberApproval({ ctx }: PropTypes) {
             <>Fel: {error?.message || error}</>
           </p>
         }
-
       </div>
     </Canvas>
   )

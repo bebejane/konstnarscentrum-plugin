@@ -21,10 +21,10 @@ export default function MemberApproval({ ctx }: PropTypes) {
   const approveApplication = async () => {
 
     //if (approved) return
+
     try {
 
       setLoading(true)
-      setApproved(false)
       setError(undefined)
 
       const formData = { ...ctx.formValues }
@@ -47,9 +47,10 @@ export default function MemberApproval({ ctx }: PropTypes) {
       setApproved(true)
 
     } catch (err) {
+      console.error(err)
       setError(err as Error)
-      setApproved(false)
     }
+
     setLoading(false)
   }
 
@@ -72,17 +73,16 @@ export default function MemberApproval({ ctx }: PropTypes) {
       <div className={s.container}>
         <strong>{approved ? 'GODKÄND' : 'EJ GODKÄND'}</strong>
         {!approved &&
-          <>
-            <p>
-              Genom att klicka på knappen nedan godkänns ansökan
-              och medlemmen skickas ett e-mail med instruktioner
-              för att skapa sitt konto och portfolio.
-            </p>
-            <Button fullWidth disabled={loading} onClick={approveApplication}>
-              {!loading ? 'Godkänn ansökan' : <Spinner />}
-            </Button>
-          </>
+          <p>
+            Genom att klicka på knappen nedan godkänns ansökan
+            och medlemmen skickas ett e-mail med instruktioner
+            för att skapa sitt konto och portfolio.
+          </p>
         }
+        <Button fullWidth disabled={loading} onClick={approveApplication}>
+          {!loading ? 'Godkänn ansökan' : <Spinner />}
+        </Button>
+
         {error &&
           <p className={s.error}>
             <>Fel: {error?.message || error}</>

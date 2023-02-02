@@ -88,9 +88,10 @@ export default function MemberApproval({ ctx }: PropTypes) {
         </Button>
         {error &&
           <p className={s.error}>
-            Error: {error?.message || error}
+            <>Fel: {error?.message || error}</>
           </p>
         }
+
       </div>
     </Canvas>
   )

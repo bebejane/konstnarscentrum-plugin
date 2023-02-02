@@ -20,9 +20,11 @@ export default function MemberApproval({ ctx }: PropTypes) {
 
   const approveApplication = async () => {
 
+    if (approved) return
     try {
 
       setLoading(true)
+      setApproved(false)
       setError(undefined)
 
       const formData = { ...ctx.formValues }
@@ -42,18 +44,31 @@ export default function MemberApproval({ ctx }: PropTypes) {
 
       await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
       await ctx.saveCurrentItem()
-      setLoading(false)
+      setApproved(true)
 
     } catch (err) {
-
       setError(err as Error)
-      setLoading(false)
+      setApproved(false)
     }
+    setLoading(false)
   }
 
   useEffect(() => {
     setApproved(ctx.formValues[ctx.field.attributes.api_key] as boolean)
   }, [ctx.formValues, ctx.field])
+
+  useEffect(() => {
+    fetch(approvalEndpoint, {
+      method: 'POST',
+      body: JSON.stringify({ ping: true }),
+      headers: {
+        'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword)
+      }
+    })
+      .then(() => console.log('pinged endpoint'))
+      .catch(err => console.error(err));
+
+  }, [basicAuthUsername, basicAuthPassword])
 
   return (
     <Canvas ctx={ctx}>
@@ -73,9 +88,11 @@ export default function MemberApproval({ ctx }: PropTypes) {
           }
         </p>
 
-        <Button fullWidth disabled={loading} onClick={approveApplication}>
-          {!loading ? 'Godkänn ansökan' : <Spinner />}
-        </Button>
+        {!approved &&
+          <Button fullWidth disabled={loading} onClick={approveApplication}>
+            {!loading ? 'Godkänn ansökan' : <Spinner />}
+          </Button>
+        }
 
         {error &&
           <p className={s.error}>

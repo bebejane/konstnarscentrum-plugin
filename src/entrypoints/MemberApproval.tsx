@@ -54,25 +54,23 @@ export default function MemberApproval({ ctx }: PropTypes) {
   }
 
   useEffect(() => {
-    setApproved(ctx.formValues[ctx.field.attributes.api_key] as boolean)
-  }, [ctx.formValues, ctx.field])
 
-  useEffect(() => {
     fetch(approvalEndpoint, {
       method: 'POST',
       body: JSON.stringify({ ping: true }),
       headers: { 'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword) }
-    })
-      .then(() => console.log('pinged endpoint'))
-      .catch(err => console.error(err));
+    }).then(() => console.log('pinged endpoint')).catch(err => console.error(err));
 
   }, [basicAuthUsername, basicAuthPassword])
+
+  useEffect(() => {
+    setApproved(ctx.formValues[ctx.field.attributes.api_key] as boolean)
+  }, [ctx.formValues, ctx.field])
 
   return (
     <Canvas ctx={ctx}>
       <div className={s.container}>
         <strong>{approved ? 'GODKÄND' : 'EJ GODKÄND'}</strong>
-
         {!approved &&
           <>
             <p>
@@ -85,14 +83,15 @@ export default function MemberApproval({ ctx }: PropTypes) {
             </Button>
           </>
         }
-
+        <Button fullWidth disabled={loading} onClick={approveApplication}>
+          {!loading ? 'Godkänn ansökan' : <Spinner />}
+        </Button>
         {error &&
           <p className={s.error}>
-            Error: {error.message}
+            Error: {error?.message || error}
           </p>
         }
       </div>
     </Canvas>
   )
-
 }

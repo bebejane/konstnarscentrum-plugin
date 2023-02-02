@@ -1,6 +1,6 @@
 import { RenderConfigScreenCtx } from 'datocms-plugin-sdk';
 import { Canvas, Button, TextField } from 'datocms-react-ui';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModelSelector from './ModelSelector';
 
 export type Props = {
@@ -24,6 +24,11 @@ export default function ConfigScreen({ ctx }: Props) {
     e.preventDefault()
     ctx.updatePluginParameters({ ...parameters, helpModels, basicAuthPassword, basicAuthUsername });
   }
+
+  useEffect(() => {
+    setBasicAuthPassword(ctx.plugin.attributes.parameters.basicAuthPassword as string)
+    setBasicAuthUsername(ctx.plugin.attributes.parameters.basicAuthUsername as string)
+  }, [ctx.plugin.attributes.parameters])
 
   const hasChanged = JSON.stringify({ ...parameters, helpModels, basicAuthPassword, basicAuthUsername }) !== JSON.stringify(parameters)
   const currentHelpModels = ctx.plugin.attributes.parameters.helpModels ? JSON.parse(ctx.plugin.attributes.parameters.helpModels as string) : []

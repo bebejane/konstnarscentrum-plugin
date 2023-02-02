@@ -83,9 +83,6 @@ export default function MemberApproval({ ctx }: PropTypes) {
             </Button>
           </>
         }
-        <Button fullWidth disabled={loading} onClick={approveApplication}>
-          {!loading ? 'Godkänn ansökan' : <Spinner />}
-        </Button>
         {error &&
           <p className={s.error}>
             <>Fel: {error?.message || error}</>

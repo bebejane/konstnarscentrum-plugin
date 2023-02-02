@@ -61,9 +61,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
     fetch(approvalEndpoint, {
       method: 'POST',
       body: JSON.stringify({ ping: true }),
-      headers: {
-        'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword)
-      }
+      headers: { 'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword) }
     })
       .then(() => console.log('pinged endpoint'))
       .catch(err => console.error(err));
@@ -73,7 +71,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
   return (
     <Canvas ctx={ctx}>
       <div className={s.container}>
-        <strong>{approved ? 'Godkänd' : 'Ej godkänd'}</strong>
+        <strong>{approved ? 'GODKÄND' : 'EJ GODKÄN  D'}</strong>
         <p>
           {approved ?
             <>

@@ -42,11 +42,12 @@ connect({
   },
 
   renderFieldExtension(fieldExtensionId: string, ctx: RenderFieldExtensionCtx) {
+
     switch (fieldExtensionId) {
       case 'region-field':
         return render(<RegionField ctx={ctx} />);
       case 'member-approval':
-        return render(<MemberApproval ctx={ctx} />);
+        return ctx.itemStatus === 'published' ? render(<MemberApproval ctx={ctx} />) : null;
       case 'model-selector':
         return render(<ModelSelectorField ctx={ctx} />);
     }

@@ -76,6 +76,10 @@ export default function MemberApproval({ ctx }: PropTypes) {
     setApproved(ctx.formValues[ctx.field.attributes.api_key] as boolean)
   }, [ctx.formValues, ctx.field])
 
+  const isNewMember = ctx.item?.meta.created_at ? true : false
+
+  if (isNewMember) return null
+
   return (
     <Canvas ctx={ctx}>
       <div className={s.container}>

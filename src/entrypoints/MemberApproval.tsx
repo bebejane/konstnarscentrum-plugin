@@ -31,7 +31,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
 
       const res = await fetch(approvalEndpoint, {
         method: 'POST',
-        body: JSON.stringify({ ...formData, approve: true }),
+        body: JSON.stringify({ ...formData, approved: true }),
         headers: {
           'Content-type': 'application/json',
           'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword)

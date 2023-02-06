@@ -81,15 +81,17 @@ export default function MemberApproval({ ctx }: PropTypes) {
       <div className={s.container}>
         <strong>{approved ? 'GODKÄND' : 'EJ GODKÄND'}</strong>
         {!approved &&
-          <p>
-            Genom att klicka på knappen nedan godkänns ansökan
-            och medlemmen skickas ett e-mail med instruktioner
-            för att skapa sitt konto och portfolio.
-          </p>
+          <>
+            <p>
+              Genom att klicka på knappen nedan godkänns ansökan
+              och medlemmen skickas ett e-mail med instruktioner
+              för att skapa sitt konto och portfolio.
+            </p>
+            <Button className={s.button} fullWidth disabled={loading} onClick={approveApplication}>
+              {!loading ? 'Godkänn ansökan' : <Spinner />}
+            </Button>
+          </>
         }
-        <Button className={s.button} fullWidth disabled={loading} onClick={approveApplication}>
-          {!loading ? 'Godkänn ansökan' : <Spinner />}
-        </Button>
 
         {error &&
           <p className={s.error}>

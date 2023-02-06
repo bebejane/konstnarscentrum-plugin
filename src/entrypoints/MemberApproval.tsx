@@ -37,15 +37,15 @@ export default function MemberApproval({ ctx }: PropTypes) {
       })
 
       const body = await res.json()
-      console.log(body);
+
 
       if (res.status !== 200)
         throw new Error('Server error: ' + body.error)
 
       try {
-        console.log(approved, ctx.item?.attributes.approved)
+        console.log(body.approved, ctx.item?.attributes.approved)
 
-        if (approved !== ctx.item?.attributes.approved) {
+        if (body.approved !== ctx.item?.attributes.approved) {
           console.log('set field value');
           await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
           await ctx.saveCurrentItem()

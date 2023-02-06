@@ -27,8 +27,6 @@ export default function MemberApproval({ ctx }: PropTypes) {
     try {
       const formData = { ...ctx.formValues }
       console.log('call approve endpoint');
-      console.log({ 'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword) })
-
       const res = await fetch(approvalEndpoint, {
         method: 'POST',
         body: JSON.stringify({ ...formData, approved: true }),
@@ -37,7 +35,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
           'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword)
         }
       })
-      console.log('call approve endpoint', 'done');
+
       const body = await res.json()
       console.log(body);
 
@@ -45,8 +43,10 @@ export default function MemberApproval({ ctx }: PropTypes) {
         throw new Error('Server error: ' + body.error)
 
       try {
-        console.log('set field value');
+        console.log(approved, ctx.item?.attributes.approved)
+
         if (approved !== ctx.item?.attributes.approved) {
+          console.log('set field value');
           await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
           await ctx.saveCurrentItem()
         }
@@ -64,7 +64,6 @@ export default function MemberApproval({ ctx }: PropTypes) {
   }
 
   useEffect(() => {
-
     fetch(approvalEndpoint, {
       method: 'POST',
       body: JSON.stringify({ ping: true }),

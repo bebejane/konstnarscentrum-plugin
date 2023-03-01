@@ -19,6 +19,11 @@ export default function RegionField({ ctx }: PropTypes) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()
 
+  const handleChange = async (newValue: RegionOption) => {
+    setValue(newValue)
+    await ctx.setFieldValue(ctx.field.attributes.api_key, newValue?.value)
+  }
+
   useEffect(() => {
 
     const client = buildClient({ apiToken: ctx.currentUserAccessToken as string })
@@ -46,10 +51,6 @@ export default function RegionField({ ctx }: PropTypes) {
 
   }, [])
 
-  useEffect(() => {
-    value?.value && ctx.setFieldValue(ctx.field.attributes.api_key, value?.value)
-  }, [value])
-
   return (
     <Canvas ctx={ctx}>
       {loading ? <Spinner /> :
@@ -59,7 +60,7 @@ export default function RegionField({ ctx }: PropTypes) {
           label=""
           value={value}
           selectInputProps={{ isMulti: false, options }}
-          onChange={(newValue) => { setValue(newValue as RegionOption) }}
+          onChange={(newValue) => handleChange(newValue as RegionOption)}
         />
       }
       {error && <div><>Error: {error.message || error}</></div>}

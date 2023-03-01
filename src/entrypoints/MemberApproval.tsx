@@ -24,9 +24,11 @@ export default function MemberApproval({ ctx }: PropTypes) {
     setLoading(true)
     setError(undefined)
 
+    console.time('call approve endpoint');
+
     try {
       const formData = { ...ctx.formValues }
-      console.log('call approve endpoint');
+
       const res = await fetch(approvalEndpoint, {
         method: 'POST',
         body: JSON.stringify({ ...formData, approved: true }),
@@ -53,6 +55,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
       } catch (err) {
         console.warn(err)
       }
+      console.timeEnd('call approve endpoint');
       setApproved(true)
 
     } catch (err) {
@@ -84,7 +87,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
           <>
             <p>
               Genom att klicka på knappen nedan godkänns ansökan
-              och medlemmen skickas ett e-mail med instruktioner
+              och medlemmen skickas ett e-post meddelande med instruktioner
               för att skapa sitt konto och portfolio.
             </p>
             <Button className={s.button} fullWidth disabled={loading} onClick={approveApplication}>

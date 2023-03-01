@@ -1,5 +1,5 @@
 import { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
-import { Canvas, SelectField } from 'datocms-react-ui';
+import { Canvas, SelectField, Spinner } from 'datocms-react-ui';
 import { useEffect, useState } from 'react';
 import { buildClient } from '@datocms/cma-client-browser';
 
@@ -16,12 +16,15 @@ export default function RegionField({ ctx }: PropTypes) {
 
   const [options, setOptions] = useState<RegionOption[] | undefined>()
   const [value, setValue] = useState<RegionOption | undefined>()
+  const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()
 
   useEffect(() => {
 
     const client = buildClient({ apiToken: ctx.currentUserAccessToken as string })
     const currentValue = ctx.formValues[ctx.field.attributes.api_key];
+
+    setLoading(true)
 
     client.items.list({ filter: { type: 'region' } }).then((regions) => {
 
@@ -35,24 +38,28 @@ export default function RegionField({ ctx }: PropTypes) {
         const roleName = ctx.currentRole.attributes.name.toLowerCase();
         setValue(options.find(({ value, label }) => label.toLowerCase() === roleName))
       }
-    }).catch(err => setError(err))
+    })
+      .catch(err => setError(err))
+      .finally(() => setLoading(false))
 
-  }, [setOptions])
+  }, [])
 
   useEffect(() => {
-    ctx.setFieldValue(ctx.field.attributes.api_key, value?.value)
+    value && ctx.setFieldValue(ctx.field.attributes.api_key, value?.value)
   }, [value])
 
   return (
     <Canvas ctx={ctx}>
-      <SelectField
-        id="role"
-        name="role"
-        label=""
-        value={value}
-        selectInputProps={{ isMulti: false, options }}
-        onChange={(newValue) => { setValue(newValue as RegionOption) }}
-      />
+      {loading ? <Spinner /> :
+        <SelectField
+          id="role"
+          name="role"
+          label=""
+          value={value}
+          selectInputProps={{ isMulti: false, options }}
+          onChange={(newValue) => { setValue(newValue as RegionOption) }}
+        />
+      }
       {error && <div>Error: {error.message}</div>}
     </Canvas>
   )

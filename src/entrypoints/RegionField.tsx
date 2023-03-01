@@ -32,11 +32,13 @@ export default function RegionField({ ctx }: PropTypes) {
 
       setOptions(options)
 
-      if (currentValue)
+      if (currentValue) {
+        console.log('set curr value', currentValue)
         setValue(options.find(({ value }) => value === currentValue))
-      else {
+      } else {
         const roleName = ctx.currentRole.attributes.name.toLowerCase();
         setValue(options.find(({ value, label }) => label.toLowerCase() === roleName))
+        console.log('set role value', roleName)
       }
     })
       .catch(err => setError(err))
@@ -45,7 +47,7 @@ export default function RegionField({ ctx }: PropTypes) {
   }, [])
 
   useEffect(() => {
-    value && ctx.setFieldValue(ctx.field.attributes.api_key, value?.value)
+    value?.value && ctx.setFieldValue(ctx.field.attributes.api_key, value?.value)
   }, [value])
 
   return (
@@ -60,7 +62,7 @@ export default function RegionField({ ctx }: PropTypes) {
           onChange={(newValue) => { setValue(newValue as RegionOption) }}
         />
       }
-      {error && <div>Error: {error.message}</div>}
+      {error && <div>Error: {error.message || error}</div>}
     </Canvas>
   )
 

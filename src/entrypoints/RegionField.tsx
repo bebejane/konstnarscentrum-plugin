@@ -19,7 +19,8 @@ export default function RegionField({ ctx }: PropTypes) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()
 
-  const handleChange = async (newValue: RegionOption) => {
+  const handleChange = async (newValue: RegionOption | undefined) => {
+    if (!newValue) return
     setValue(newValue)
     await ctx.setFieldValue(ctx.field.attributes.api_key, newValue?.value)
   }
@@ -42,7 +43,7 @@ export default function RegionField({ ctx }: PropTypes) {
         setValue(options.find(({ value }) => value === currentValue))
       } else {
         const roleName = ctx.currentRole.attributes.name.toLowerCase();
-        setValue(options.find(({ value, label }) => label.toLowerCase() === roleName))
+        handleChange(options.find(({ value, label }) => label.toLowerCase() === roleName))
         console.log('set role value', roleName)
       }
     })

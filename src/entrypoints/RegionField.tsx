@@ -62,7 +62,7 @@ export default function RegionField({ ctx }: PropTypes) {
           onChange={(newValue) => { setValue(newValue as RegionOption) }}
         />
       }
-      {error && <div>Error: {error.message || error}</div>}
+      {error && <div><>Error: {error.message || error}</></div>}
     </Canvas>
   )
 

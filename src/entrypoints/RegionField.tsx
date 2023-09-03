@@ -39,7 +39,6 @@ export default function RegionField({ ctx }: PropTypes) {
       setOptions(options)
 
       if (currentValue) {
-        console.log('set curr value', currentValue)
         setValue(options.find(({ value }) => value === currentValue))
       } else {
         const roleName = ctx.currentRole.attributes.name.toLowerCase();

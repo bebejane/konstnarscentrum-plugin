@@ -3,7 +3,6 @@ import { RenderFieldExtensionCtx } from 'datocms-plugin-sdk';
 import { Canvas, Button, Spinner } from 'datocms-react-ui';
 import { useEffect, useState } from 'react';
 import { siteUrl } from '../utils';
-import { config } from 'process';
 
 const approvalEndpoint = `${siteUrl}/api/auth/approve`
 

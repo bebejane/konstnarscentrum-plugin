@@ -67,13 +67,14 @@ export default function MemberApproval({ ctx }: PropTypes) {
   }
 
   useEffect(() => {
-    console.log(basicAuthUsername + " - " + basicAuthPassword)
-    console.log(btoa(basicAuthUsername + ":" + basicAuthPassword))
     fetch(approvalEndpoint, {
       method: 'POST',
       body: JSON.stringify({ ping: true }),
       headers: { 'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword) }
-    }).then(() => console.log('pinged endpoint')).catch(err => console.error(err));
+    }).then((res) => {
+      console.log(res)
+      console.log('pinged endpoint')
+    }).catch(err => console.error(err));
 
   }, [basicAuthUsername, basicAuthPassword])
 

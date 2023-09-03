@@ -34,6 +34,7 @@ export default function MemberApproval({ ctx }: PropTypes) {
         body: JSON.stringify({ ...formData, approved: true }),
         headers: {
           'Content-type': 'application/json',
+          'Accept': 'application/json',
           'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword)
         }
       })
@@ -70,11 +71,12 @@ export default function MemberApproval({ ctx }: PropTypes) {
     fetch(approvalEndpoint, {
       method: 'POST',
       body: JSON.stringify({ ping: true }),
-      headers: { 'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword) }
-    }).then((res) => {
-      console.log(res)
-      console.log('pinged endpoint')
-    }).catch(err => console.error(err));
+      headers: {
+        'Authorization': 'Basic ' + btoa(basicAuthUsername + ":" + basicAuthPassword),
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    }).then(() => { console.log('pinged endpoint') }).catch(err => console.error(err));
 
   }, [basicAuthUsername, basicAuthPassword])
 

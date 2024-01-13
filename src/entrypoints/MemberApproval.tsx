@@ -40,7 +40,6 @@ export default function MemberApproval({ ctx }: PropTypes) {
 
       const body = await res.json()
 
-
       if (res.status !== 200)
         throw new Error('Server error: ' + body.error)
 
@@ -51,6 +50,9 @@ export default function MemberApproval({ ctx }: PropTypes) {
           console.log('set field value');
           await ctx.setFieldValue(ctx.field.attributes.api_key as string, true)
           await ctx.saveCurrentItem()
+          ctx.notice('Ansökan godkänd!')
+        } else if (body.approved && body.approved === ctx.item?.attributes.approved) {
+          ctx.notice('Ansöknings meddelande skickat!')
         }
       } catch (err) {
         console.warn(err)
@@ -87,18 +89,14 @@ export default function MemberApproval({ ctx }: PropTypes) {
     <Canvas ctx={ctx}>
       <div className={s.container}>
         <strong>{approved ? 'GODKÄND' : 'EJ GODKÄND'}</strong>
-        {!approved &&
-          <>
-            <p>
-              Genom att klicka på knappen nedan godkänns ansökan
-              och medlemmen skickas ett e-post meddelande med instruktioner
-              för att skapa sitt konto och portfolio.
-            </p>
-            <Button className={s.button} fullWidth disabled={loading} onClick={approveApplication}>
-              {!loading ? 'Godkänn ansökan' : <Spinner />}
-            </Button>
-          </>
-        }
+        <p>
+          Genom att klicka på knappen nedan godkänns ansökan
+          och medlemmen skickas ett e-post meddelande med instruktioner
+          för att skapa sitt konto och portfolio.
+        </p>
+        <Button className={s.button} fullWidth disabled={loading} onClick={approveApplication}>
+          {!loading ? approved ? 'Skicka bekfräftelse meddelande igen' : 'Godkänn ansökan' : <Spinner />}
+        </Button>
 
         {error &&
           <p className={s.error}>
